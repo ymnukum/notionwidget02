@@ -1,44 +1,172 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ignite Quotes</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Inspiration Widget</title>
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+
     <style>
-        @keyframes gradient-move {
+        /* Сброс стилей */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body, html {
+            height: 100%;
+            width: 100%;
+            overflow: hidden; /* Чтобы не было скролла */
+        }
+
+        /* Огненный градиент.
+           Используем чистый CSS для анимации без библиотек.
+        */
+        .fire-background {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            
+            /* Градиент: Глубокий бордовый -> Огненно-оранжевый -> Темно-красный */
+            background: linear-gradient(-45deg, #1a0000, #450a0a, #ea580c, #7f1d1d, #2b0000);
+            background-size: 400% 400%;
+            animation: magmaFlow 18s ease-in-out infinite;
+        }
+
+        @keyframes magmaFlow {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
-        /* Fiery gradient: deep black base with glowing flickers of ember and flame */
-        .animate-fiery {
-            background: linear-gradient(-45deg, #000000, #1a0505, #ea580c, #000000, #7f1d1d, #000000, #ff4d00, #000000);
-            background-size: 400% 400%;
-            animation: gradient-move 15s ease-in-out infinite;
+
+        /* Контейнер для текста */
+        .quote-container {
+            max-width: 800px;
+            text-align: center;
+            color: #ffffff;
+            opacity: 0; /* Скрыто до загрузки JS */
+            animation: fadeIn 1.5s ease-out forwards;
         }
-        .editorial-font {
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Стили типографики */
+        .quote-text {
             font-family: 'DM Serif Display', serif;
+            font-size: clamp(2rem, 5vw, 3.5rem); /* Адаптивный размер */
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
-        .body-font {
+
+        .quote-author {
             font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            opacity: 0.8;
+            font-weight: 300;
+        }
+
+        /* Кавычки для красоты */
+        .quote-text::before {
+            content: "“";
+            opacity: 0.5;
+        }
+        .quote-text::after {
+            content: "”";
+            opacity: 0.5;
         }
     </style>
-<script type="importmap">
-{
-  "imports": {
-    "react/": "https://esm.sh/react@^19.2.3/",
-    "react": "https://esm.sh/react@^19.2.3",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/"
-  }
-}
-</script>
 </head>
-<body class="m-0 p-0 overflow-hidden bg-black">
-    <div id="root"></div>
+<body>
+
+    <div class="fire-background">
+        <div class="quote-container">
+            <div class="quote-text" id="quote-text">Loading inspiration...</div>
+            <div class="quote-author" id="quote-author"></div>
+        </div>
+    </div>
+
+    <script>
+        // --- ЗДЕСЬ ТВОИ ДАННЫЕ ---
+        // Просто добавляй или меняй строки внутри кавычек.
+        
+        const quotes = [
+            {
+                text: "Design is not just what it looks like and feels like. Design is how it works.",
+                author: "Steve Jobs"
+            },
+            {
+                text: "Less is more.",
+                author: "Mies van der Rohe"
+            },
+            {
+                text: "Good design is obvious. Great design is transparent.",
+                author: "Joe Sparano"
+            },
+            {
+                text: "Styles come and go. Good design is a language, not a style.",
+                author: "Massimo Vignelli"
+            },
+            {
+                text: "Architecture should speak of its time and place, but yearn for timelessness.",
+                author: "Frank Gehry"
+            },
+            {
+                text: "Simplicity is the ultimate sophistication.",
+                author: "Leonardo da Vinci"
+            },
+            {
+                text: "The details are not the details. They make the design.",
+                author: "Charles Eames"
+            },
+            {
+                text: "If you think good design is expensive, you should look at the cost of bad design.",
+                author: "Ralf Speth"
+            },
+            {
+                text: "There are 360 degrees, so why stick to one?",
+                author: "Zaha Hadid"
+            },
+            {
+                text: "Make it simple, but significant.",
+                author: "Don Draper"
+            }
+            {
+                text: "You have to be in a state of play to design, if you’re not in a state of play you can’t make anything",
+                author: "Paula Scher"
+            },
+            {
+                text: "Sometimes, bad products succeed and good products fail. The world is complex.",
+                author: "Donald Norman"
+            },
+        ];
+
+        // --- ЛОГИКА ---
+        function displayRandomQuote() {
+            // Выбираем случайный индекс
+            const randomIndex = Math.floor(Math.random() * quotes.length);
+            const quote = quotes[randomIndex];
+
+            // Вставляем текст в HTML
+            document.getElementById('quote-text').textContent = quote.text;
+            document.getElementById('quote-author').textContent = "- " + quote.author;
+        }
+
+        // Запускаем при загрузке страницы
+        displayRandomQuote();
+    </script>
+
 </body>
 </html>
