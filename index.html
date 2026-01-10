@@ -1,0 +1,44 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ignite Quotes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        @keyframes gradient-move {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        /* Fiery gradient: deep black base with glowing flickers of ember and flame */
+        .animate-fiery {
+            background: linear-gradient(-45deg, #000000, #1a0505, #ea580c, #000000, #7f1d1d, #000000, #ff4d00, #000000);
+            background-size: 400% 400%;
+            animation: gradient-move 15s ease-in-out infinite;
+        }
+        .editorial-font {
+            font-family: 'DM Serif Display', serif;
+        }
+        .body-font {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/"
+  }
+}
+</script>
+</head>
+<body class="m-0 p-0 overflow-hidden bg-black">
+    <div id="root"></div>
+</body>
+</html>
