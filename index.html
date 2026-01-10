@@ -42,17 +42,18 @@
         }
 
         /* --- 2. СЕТКА (GRID) --- */
+        /* ОБНОВЛЕННЫЙ СТИЛЬ СЕТКИ КАК НА СКРИНШОТЕ */
         .grid-layer {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
             z-index: 2;
-            pointer-events: none; /* Чтобы сквозь нее можно было кликать, если что */
+            pointer-events: none; /* Чтобы сквозь нее можно было кликать */
             
-            /* Рисуем сетку 80px линиями CSS */
+            /* Рисуем сетку 80px очень тонкими и едва заметными линиями */
             background-size: 80px 80px;
             background-image:
-                linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+                linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
         }
 
         /* --- 3. КОНТЕНТ --- */
