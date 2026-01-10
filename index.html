@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fiery Editorial Widget</title>
+    <title>Architectural Fire Widget</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
     <style>
-        /* Сброс и база */
+        /* Сброс */
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body, html {
@@ -18,21 +18,18 @@
             width: 100%;
             overflow: hidden;
             background-color: #000;
+            font-family: 'Inter', sans-serif;
         }
 
-        /* --- ФОН И АНИМАЦИЯ --- */
-        .fire-background {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 2rem;
+        /* --- 1. ФОНОВЫЙ СЛОЙ (ОГОНЬ) --- */
+        .fire-layer {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 1;
             
-            /* Твой огненный Monopo-style градиент */
+            /* Тот самый глубокий огненный градиент */
             background-image: 
-                radial-gradient(circle at 50% 30%, rgba(255, 126, 0, 0.7), rgba(165, 42, 42, 0.5), rgba(0, 0, 0, 0.95)),
+                radial-gradient(circle at 50% 30%, rgba(255, 126, 0, 0.75), rgba(165, 42, 42, 0.55), rgba(0, 0, 0, 0.95)),
                 linear-gradient(to bottom, #000000, #1f0505, #4a120a, #000000);
             background-size: 200% 200%;
             animation: magmaFlow 20s ease-in-out infinite;
@@ -44,75 +41,89 @@
             100% { background-position: 50% 0%; }
         }
 
-        /* --- ЛИНИИ (LINES) --- */
-        
-        /* Общий стиль для линий */
-        .decoration-line {
+        /* --- 2. СЕТКА (GRID) --- */
+        .grid-layer {
             position: absolute;
-            background-color: rgba(255, 255, 255, 0.15); /* Очень тонкие и прозрачные */
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 2;
+            pointer-events: none; /* Чтобы сквозь нее можно было кликать, если что */
+            
+            /* Рисуем сетку 80px линиями CSS */
+            background-size: 80px 80px;
+            background-image:
+                linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+        }
+
+        /* --- 3. КОНТЕНТ --- */
+        .content-wrapper {
+            position: relative;
             z-index: 10;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        /* Вертикальные линии по бокам экрана (создают структуру) */
-        .line-vertical-left, .line-vertical-right {
-            top: 0;
-            bottom: 0;
-            width: 1px;
-            height: 0; /* Для анимации роста */
-            animation: growVertical 1.5s ease-out forwards;
-            animation-delay: 0.5s;
-        }
-
-        .line-vertical-left { left: 12%; }
-        .line-vertical-right { right: 12%; }
-
-        @keyframes growVertical {
-            from { height: 0; opacity: 0; }
-            to { height: 100%; opacity: 1; }
-        }
-
-        /* Горизонтальный разделитель по центру */
-        .separator-line {
-            width: 0; /* Для анимации */
-            height: 1px;
-            background-color: rgba(255, 255, 255, 0.5);
-            margin: 2rem 0;
-            animation: growHorizontal 1s ease-out forwards;
-            animation-delay: 0.8s;
-        }
-
-        @keyframes growHorizontal {
-            from { width: 0; opacity: 0; }
-            to { width: 60px; opacity: 1; } /* Длина линии 60px */
-        }
-
-
-        /* --- КОНТЕНТ --- */
-        .quote-container {
-            max-width: 800px; /* Чуть уже, чтобы влезть между линиями */
+        /* Контейнер цитаты */
+        .quote-card {
+            position: relative;
+            max-width: 800px;
+            padding: 3rem; /* Отступы внутри рамки */
             text-align: center;
             color: #ffffff;
-            opacity: 0; 
-            animation: fadeIn 1.2s ease-out forwards;
+            
+            /* Анимация появления всего блока */
+            opacity: 0;
+            animation: cardFadeIn 1.5s ease-out forwards;
             animation-delay: 0.2s;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 20;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes cardFadeIn {
+            from { opacity: 0; transform: scale(0.98); }
+            to { opacity: 1; transform: scale(1); }
         }
 
+        /* --- ДЕКОРАТИВНАЯ РАМКА (VIEWFINDER) --- */
+        .frame-line {
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.15); /* Базовая прозрачность */
+            animation: pulseLine 6s ease-in-out infinite;
+        }
+
+        /* Позиционирование 4 линий */
+        .fl-top { top: 0; left: 0; right: 0; height: 1px; }
+        .fl-bottom { bottom: 0; left: 0; right: 0; height: 1px; }
+        .fl-left { top: 0; bottom: 0; left: 0; width: 1px; }
+        .fl-right { top: 0; bottom: 0; right: 0; width: 1px; }
+
+        /* Уголки (акценты на пересечениях) */
+        .corner {
+            position: absolute;
+            width: 6px; height: 6px;
+            background: white;
+            opacity: 0.6;
+        }
+        .c-tl { top: -2px; left: -2px; }
+        .c-tr { top: -2px; right: -2px; }
+        .c-bl { bottom: -2px; left: -2px; }
+        .c-br { bottom: -2px; right: -2px; }
+
+
+        @keyframes pulseLine {
+            0% { opacity: 0.1; }
+            50% { opacity: 0.3; } /* Легкое мерцание */
+            100% { opacity: 0.1; }
+        }
+
+        /* --- ТИПОГРАФИКА --- */
         .quote-text {
             font-family: 'DM Serif Display', serif;
             font-size: clamp(1.8rem, 4vw, 3.2rem);
             line-height: 1.15;
-            text-shadow: 0 4px 20px rgba(0,0,0,0.6);
-            padding: 0 1rem;
+            margin-bottom: 2.5rem;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.7);
         }
 
         .quote-text::before { content: "“"; opacity: 0.5; margin-right: 5px; }
@@ -122,7 +133,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 4px;
+            gap: 6px;
         }
 
         .quote-author {
@@ -132,7 +143,6 @@
             letter-spacing: 3px;
             font-weight: 600;
             opacity: 0.9;
-            margin-bottom: 2px;
         }
 
         .quote-role {
@@ -143,23 +153,44 @@
             opacity: 0.5;
             font-weight: 300;
         }
+        
+        /* Маленькая линия между автором и ролью */
+        .meta-separator {
+            width: 20px;
+            height: 1px;
+            background: rgba(255,255,255,0.4);
+            margin: 2px 0;
+        }
+
     </style>
 </head>
 <body>
 
-    <div class="fire-background">
-        <div class="decoration-line line-vertical-left"></div>
-        <div class="decoration-line line-vertical-right"></div>
+    <div class="fire-layer"></div>
 
-        <div class="quote-container">
-            <div class="quote-text" id="quote-text"></div>
+    <div class="grid-layer"></div>
+
+    <div class="content-wrapper">
+        <div class="quote-card">
             
-            <div class="separator-line"></div>
+            <div class="frame-line fl-top"></div>
+            <div class="frame-line fl-bottom"></div>
+            <div class="frame-line fl-left"></div>
+            <div class="frame-line fl-right"></div>
+            
+            <div class="corner c-tl"></div>
+            <div class="corner c-tr"></div>
+            <div class="corner c-bl"></div>
+            <div class="corner c-br"></div>
+
+            <div class="quote-text" id="quote-text"></div>
             
             <div class="meta-container">
                 <div class="quote-author" id="quote-author"></div>
+                <div class="meta-separator"></div>
                 <div class="quote-role" id="quote-role"></div>
             </div>
+
         </div>
     </div>
 
