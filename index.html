@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fiery Inspiration Widget</title>
+    <title>Fiery Editorial Widget</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
     <style>
-        /* Сброс стилей */
+        /* Сброс и база */
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body, html {
@@ -20,50 +20,86 @@
             background-color: #000;
         }
 
-        /*
-           ОГНЕННЫЙ ГРАДИЕНТ ПО РЕФЕРЕНСУ
-           Сложный, многослойный градиент для имитации "лавы" в темноте.
-           Сочетает радиальные (круглые) и линейные градиенты.
-        */
+        /* --- ФОН И АНИМАЦИЯ --- */
         .fire-background {
             width: 100%;
             height: 100%;
+            position: relative;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 2rem;
-
-            /* Цвета: глубокий черный, темный бордовый, огненно-оранжевый, яркий желто-оранжевый */
+            
+            /* Твой огненный Monopo-style градиент */
             background-image: 
-                radial-gradient(circle at 50% 30%, rgba(255, 126, 0, 0.8), rgba(165, 42, 42, 0.6), rgba(0, 0, 0, 0.9)),
-                linear-gradient(to bottom, #000000, #2a0a0a, #5a1a0a, #000000);
-            
-            /* Увеличиваем фон для плавного движения */
+                radial-gradient(circle at 50% 30%, rgba(255, 126, 0, 0.7), rgba(165, 42, 42, 0.5), rgba(0, 0, 0, 0.95)),
+                linear-gradient(to bottom, #000000, #1f0505, #4a120a, #000000);
             background-size: 200% 200%;
-            
-            /* Медленная, плавная анимация движения */
             animation: magmaFlow 20s ease-in-out infinite;
         }
 
-        /* Анимация движения градиента */
         @keyframes magmaFlow {
             0% { background-position: 50% 0%; }
             50% { background-position: 50% 100%; }
             100% { background-position: 50% 0%; }
         }
 
-        /* Контейнер для цитаты с анимацией появления */
+        /* --- ЛИНИИ (LINES) --- */
+        
+        /* Общий стиль для линий */
+        .decoration-line {
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.15); /* Очень тонкие и прозрачные */
+            z-index: 10;
+        }
+
+        /* Вертикальные линии по бокам экрана (создают структуру) */
+        .line-vertical-left, .line-vertical-right {
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            height: 0; /* Для анимации роста */
+            animation: growVertical 1.5s ease-out forwards;
+            animation-delay: 0.5s;
+        }
+
+        .line-vertical-left { left: 12%; }
+        .line-vertical-right { right: 12%; }
+
+        @keyframes growVertical {
+            from { height: 0; opacity: 0; }
+            to { height: 100%; opacity: 1; }
+        }
+
+        /* Горизонтальный разделитель по центру */
+        .separator-line {
+            width: 0; /* Для анимации */
+            height: 1px;
+            background-color: rgba(255, 255, 255, 0.5);
+            margin: 2rem 0;
+            animation: growHorizontal 1s ease-out forwards;
+            animation-delay: 0.8s;
+        }
+
+        @keyframes growHorizontal {
+            from { width: 0; opacity: 0; }
+            to { width: 60px; opacity: 1; } /* Длина линии 60px */
+        }
+
+
+        /* --- КОНТЕНТ --- */
         .quote-container {
-            max-width: 900px;
+            max-width: 800px; /* Чуть уже, чтобы влезть между линиями */
             text-align: center;
             color: #ffffff;
             opacity: 0; 
             animation: fadeIn 1.2s ease-out forwards;
-            animation-delay: 0.1s;
+            animation-delay: 0.2s;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            z-index: 20;
         }
 
         @keyframes fadeIn {
@@ -71,49 +107,40 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Стили для текста цитаты */
         .quote-text {
             font-family: 'DM Serif Display', serif;
-            font-size: clamp(1.8rem, 4.5vw, 3.5rem);
+            font-size: clamp(1.8rem, 4vw, 3.2rem);
             line-height: 1.15;
-            margin-bottom: 2rem;
-            /* Глубокая тень для лучшей читаемости на темном фоне */
             text-shadow: 0 4px 20px rgba(0,0,0,0.6);
+            padding: 0 1rem;
         }
 
         .quote-text::before { content: "“"; opacity: 0.5; margin-right: 5px; }
         .quote-text::after { content: "”"; opacity: 0.5; margin-left: 5px; }
 
-        /* Контейнер для автора и роли */
         .meta-container {
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 4px;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
         }
 
-        /* Стили для автора */
         .quote-author {
             font-family: 'Inter', sans-serif;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             text-transform: uppercase;
-            letter-spacing: 2.5px;
+            letter-spacing: 3px;
             font-weight: 600;
-            opacity: 0.95;
-            border-bottom: 1px solid rgba(255,255,255,0.3);
-            padding-bottom: 4px;
-            margin-bottom: 4px;
-            display: inline-block;
+            opacity: 0.9;
+            margin-bottom: 2px;
         }
 
-        /* Стили для роли */
         .quote-role {
             font-family: 'Inter', sans-serif;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             text-transform: uppercase;
             letter-spacing: 1.5px;
-            opacity: 0.7;
+            opacity: 0.5;
             font-weight: 300;
         }
     </style>
@@ -121,8 +148,13 @@
 <body>
 
     <div class="fire-background">
+        <div class="decoration-line line-vertical-left"></div>
+        <div class="decoration-line line-vertical-right"></div>
+
         <div class="quote-container">
             <div class="quote-text" id="quote-text"></div>
+            
+            <div class="separator-line"></div>
             
             <div class="meta-container">
                 <div class="quote-author" id="quote-author"></div>
@@ -134,134 +166,28 @@
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             
-            // СПИСОК ЦИТАТ
             const quotes = [
-                {
-                    id: 1,
-                    text: "Words have meaning. Type has spirit. The combination is spectacular.",
-                    author: "Paula Scher",
-                    role: "Graphic Designer"
-                },
-                {
-                    id: 2,
-                    text: "It’s very easy to be different, but very difficult to be better.",
-                    author: "Jony Ive",
-                    role: "Industrial Designer"
-                },
-                {
-                    id: 3,
-                    text: "Good design is as little design as possible.",
-                    author: "Dieter Rams",
-                    role: "Industrial Designer"
-                },
-                {
-                    id: 4,
-                    text: "There are 360 degrees, so why stick to one?",
-                    author: "Zaha Hadid",
-                    role: "Architect"
-                },
-                {
-                    id: 5,
-                    text: "Form follows function—that has been misunderstood. Form and function should be one, joined in a spiritual union.",
-                    author: "Frank Lloyd Wright",
-                    role: "Architect"
-                },
-                {
-                    id: 6,
-                    text: "We don’t just open restaurants; we create a lifestyle, a community, and a culture.",
-                    author: "Askar Baitassov",
-                    role: "Entrepreneur & Founder of ABR"
-                },
-                {
-                    id: 7,
-                    text: "The life of a designer is a life of fight. Fight against the ugliness.",
-                    author: "Massimo Vignelli",
-                    role: "Designer"
-                },
-                {
-                    id: 8,
-                    text: "Design is everything. Everything!",
-                    author: "Paul Rand",
-                    role: "Graphic Designer"
-                },
-                {
-                    id: 9,
-                    text: "Fashion fades, only style remains the same.",
-                    author: "Coco Chanel",
-                    role: "Fashion Designer"
-                },
-                {
-                    id: 10,
-                    text: "Everything I do is for the 17-year-old version of myself.",
-                    author: "Virgil Abloh",
-                    role: "Creative Director"
-                },
-                {
-                    id: 11,
-                    text: "Space and light and order. Those are the things that men need just as much as they need food or a place to sleep.",
-                    author: "Le Corbusier",
-                    role: "Architect"
-                },
-                {
-                    id: 12,
-                    text: "Right angles don't attract me. Nor straight, hard and inflexible lines created by man.",
-                    author: "Oscar Niemeyer",
-                    role: "Architect"
-                },
-                {
-                    id: 13,
-                    text: "The details are not the details. They make the design.",
-                    author: "Charles Eames",
-                    role: "Designer"
-                },
-                {
-                    id: 14,
-                    text: "Design is not for philosophy it's for life.",
-                    author: "Issey Miyake",
-                    role: "Fashion Designer"
-                },
-                {
-                    id: 15,
-                    text: "Design is thinking made visual.",
-                    author: "Saul Bass",
-                    role: "Graphic Designer"
-                },
-                {
-                    id: 16,
-                    text: "There are three responses to a piece of design – yes, no, and WOW! Wow is the one to aim for.",
-                    author: "Milton Glaser",
-                    role: "Graphic Designer"
-                },
-                {
-                    id: 17,
-                    text: "When the solution is not beautiful, I know it is wrong.",
-                    author: "Buckminster Fuller",
-                    role: "Architect & Inventor"
-                },
-                {
-                    id: 18,
-                    text: "Architects spend an entire life with this unreasonable idea that you can fight against gravity.",
-                    author: "Renzo Piano",
-                    role: "Architect"
-                },
-                {
-                    id: 19,
-                    text: "Architecture is the art and science of making sure that our cities and buildings actually fit with the way we want to live our lives.",
-                    author: "Bjarke Ingels",
-                    role: "Architect"
-                },
-                {
-                    id: 20,
-                    text: "I believe that architecture is not about creating a form, but about creating space.",
-                    author: "Tadao Ando",
-                    role: "Architect"
-                },
-                {
-                    id: 21,
-                    text: "Good design is actually a lot harder to notice than poor design, in part because good designs fit our needs so well that the design is invisible.",
-                    author: "Don Norman",
-                    role: "Design Researcher"
-                }
+                { id: 1, text: "Words have meaning. Type has spirit. The combination is spectacular.", author: "Paula Scher", role: "Graphic Designer" },
+                { id: 2, text: "It’s very easy to be different, but very difficult to be better.", author: "Jony Ive", role: "Industrial Designer" },
+                { id: 3, text: "Good design is as little design as possible.", author: "Dieter Rams", role: "Industrial Designer" },
+                { id: 4, text: "There are 360 degrees, so why stick to one?", author: "Zaha Hadid", role: "Architect" },
+                { id: 5, text: "Form follows function—that has been misunderstood. Form and function should be one, joined in a spiritual union.", author: "Frank Lloyd Wright", role: "Architect" },
+                { id: 6, text: "We don’t just open restaurants; we create a lifestyle, a community, and a culture.", author: "Askar Baitassov", role: "Entrepreneur & Founder of ABR" },
+                { id: 7, text: "The life of a designer is a life of fight. Fight against the ugliness.", author: "Massimo Vignelli", role: "Designer" },
+                { id: 8, text: "Design is everything. Everything!", author: "Paul Rand", role: "Graphic Designer" },
+                { id: 9, text: "Fashion fades, only style remains the same.", author: "Coco Chanel", role: "Fashion Designer" },
+                { id: 10, text: "Everything I do is for the 17-year-old version of myself.", author: "Virgil Abloh", role: "Creative Director" },
+                { id: 11, text: "Space and light and order. Those are the things that men need just as much as they need food or a place to sleep.", author: "Le Corbusier", role: "Architect" },
+                { id: 12, text: "Right angles don't attract me. Nor straight, hard and inflexible lines created by man.", author: "Oscar Niemeyer", role: "Architect" },
+                { id: 13, text: "The details are not the details. They make the design.", author: "Charles Eames", role: "Designer" },
+                { id: 14, text: "Design is not for philosophy it's for life.", author: "Issey Miyake", role: "Fashion Designer" },
+                { id: 15, text: "Design is thinking made visual.", author: "Saul Bass", role: "Graphic Designer" },
+                { id: 16, text: "There are three responses to a piece of design – yes, no, and WOW! Wow is the one to aim for.", author: "Milton Glaser", role: "Graphic Designer" },
+                { id: 17, text: "When the solution is not beautiful, I know it is wrong.", author: "Buckminster Fuller", role: "Architect & Inventor" },
+                { id: 18, text: "Architects spend an entire life with this unreasonable idea that you can fight against gravity.", author: "Renzo Piano", role: "Architect" },
+                { id: 19, text: "Architecture is the art and science of making sure that our cities and buildings actually fit with the way we want to live our lives.", author: "Bjarke Ingels", role: "Architect" },
+                { id: 20, text: "I believe that architecture is not about creating a form, but about creating space.", author: "Tadao Ando", role: "Architect" },
+                { id: 21, text: "Good design is actually a lot harder to notice than poor design, in part because good designs fit our needs so well that the design is invisible.", author: "Don Norman", role: "Design Researcher" }
             ];
 
             const textEl = document.getElementById('quote-text');
@@ -270,11 +196,9 @@
 
             function displayRandomQuote() {
                 try {
-                    // Выбор случайной цитаты
                     const randomIndex = Math.floor(Math.random() * quotes.length);
                     const quote = quotes[randomIndex];
 
-                    // Вставка данных
                     textEl.textContent = quote.text;
                     authorEl.textContent = quote.author;
                     roleEl.textContent = quote.role;
@@ -286,7 +210,6 @@
                 }
             }
 
-            // Запуск функции
             displayRandomQuote();
         });
     </script>
